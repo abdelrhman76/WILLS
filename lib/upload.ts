@@ -1,41 +1,31 @@
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
 import { v4 as uuid } from "uuid";
+import { supabase } from "./supabase";
 
 async function saveFile(file: File, folder: string) {
-
   const bytes = await file.arrayBuffer();
 
   const buffer = Buffer.from(bytes);
-  console.log("File Name:", file.name);
-console.log("File Size:", buffer.length);
 
   const extension = file.name.split(".").pop();
 
-  const fileName = `${uuid()}.${extension}`;
+  const fileName = `${folder}/${uuid()}.${extension}`;
 
-  const uploadDir = path.join(
-    process.cwd(),
-    "public",
-    "uploads",
-    folder
-  );
+  const { error } = await supabase.storage
+    .from("uploads")
+    .upload(fileName, buffer, {
+      contentType: file.type,
+      upsert: false,
+    });
 
-  // لو الفولدر مش موجود اعمله
-  await mkdir(uploadDir, {
-    recursive: true,
-  });
+  if (error) {
+    throw error;
+  }
 
-  const uploadPath = path.join(
-    uploadDir,
-    fileName
-  );
+  const { data } = supabase.storage
+    .from("uploads")
+    .getPublicUrl(fileName);
 
-  console.log(uploadPath);
-
-  await writeFile(uploadPath, buffer);
-
-  return `/uploads/${folder}/${fileName}`;
+  return data.publicUrl;
 }
 
 export async function uploadCategoryImage(file: File) {
