@@ -1,25 +1,17 @@
 import Link from "next/link";
 import { CategoryService } from "@/lib/services/category.service";
 import DeleteCategoryButton from "@/components/admin/DeleteCategoryButton";
-import { Category, Project } from "@prisma/client";
 
 const service = new CategoryService();
 
-type CategoryWithProjects = Category & {
-  projects: Project[];
-};
-
 export default async function CategoriesPage() {
-  const categories: CategoryWithProjects[] =
-    await service.getAll();
+  const categories: any[] = await service.getAll();
 
   return (
     <div>
       <div className="flex items-center justify-between mb-10">
         <div>
-          <h1 className="text-4xl font-bold">
-            Categories
-          </h1>
+          <h1 className="text-4xl font-bold">Categories</h1>
 
           <p className="text-gray-500 mt-2">
             Manage all project categories
@@ -35,14 +27,11 @@ export default async function CategoriesPage() {
       </div>
 
       <div className="grid lg:grid-cols-2 gap-8">
-
         {categories.map((category) => (
-
           <div
             key={category.id}
             className="bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition"
           >
-
             <img
               src={category.bannerImage || "/images/no-image.jpg"}
               alt={category.name}
@@ -50,20 +39,16 @@ export default async function CategoriesPage() {
             />
 
             <div className="p-8">
-
               <h2 className="text-3xl font-bold text-[#071B44]">
                 {category.name}
               </h2>
 
               <p className="text-gray-600 mt-5">
-                <span className="font-semibold">
-                  Price Range
-                </span>
+                <span className="font-semibold">Price Range</span>
               </p>
 
               <p className="text-sky-600 font-bold text-xl">
-                {category.minPrice.toLocaleString()} EGP
-                {" → "}
+                {category.minPrice.toLocaleString()} EGP →{" "}
                 {category.maxPrice.toLocaleString()} EGP
               </p>
 
@@ -78,7 +63,6 @@ export default async function CategoriesPage() {
               </p>
 
               <div className="flex gap-3 mt-8">
-
                 <Link
                   href={`/admin/categories/${category.id}`}
                   className="flex-1 bg-[#071B44] hover:bg-[#0b255d] text-center text-white py-3 rounded-xl"
@@ -94,15 +78,10 @@ export default async function CategoriesPage() {
                 </Link>
 
                 <DeleteCategoryButton id={category.id} />
-
               </div>
-
             </div>
-
           </div>
-
         ))}
-
       </div>
     </div>
   );
