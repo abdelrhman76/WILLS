@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Category {
+  id            Int       @id @default(autoincrement())
+
+  name          String
+  slug          String    @unique
+
+  minPrice      Int
+  maxPrice      Int
+
+  description   String?
+
+  bannerImage   String?
+
+  displayOrder  Int       @default(0)
+
+  projects       Project[]
+
+  createdAt      DateTime @default(now())
+}
+
+model Project {
+
+  id            Int       @id @default(autoincrement())
+
+  title         String
+  slug          String    @unique
+
+  location      String
+  developer     String
+
+  price         String
+
+  description   String
+
+  whatsapp      String?
+
+  coverImage    String
+
+  gallery1      String?
+  gallery2      String?
+  gallery3      String?
+
+  featured      Boolean   @default(false)
+
+  categoryId    Int
+  category      Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  images        Image[]
+  paymentPlans  PaymentPlan[]
+
+  createdAt     DateTime  @default(now())
+}
+
+model Image {
+
+  id          Int      @id @default(autoincrement())
+
+  imageUrl    String
+
+  projectId   Int
+  project     Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+}
+
+model PaymentPlan {
+  id                Int      @id @default(autoincrement())
+
+  title             String
+  years             Int
+
+  paymentType       String?
+
+  originalPrice     Float
+  discount          Float
+  discountAmount    Float
+  newPrice          Float
+
+  downPayment       Float
+  secondPayment     Float?
+
+  remainingAmount   Float
+
+  installmentCount  Int
+  installmentValue  Float
+
+  createdAt         DateTime @default(now())
+
+  projectId         Int
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+model Admin {
+
+  id         Int    @id @default(autoincrement())
+
+  username   String @unique
+
+  password   String
+
+}

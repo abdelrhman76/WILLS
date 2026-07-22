@@ -1,0 +1,152 @@
+@import "tailwindcss";
+
+:root {
+  --font-heading: var(--font-poppins);
+  --font-body: var(--font-inter);
+
+  --primary: #4AA8FF;
+  --primary-dark: #071B44;
+
+  --background: #F7F9FC;
+  --surface: #FFFFFF;
+
+  --text: #071B44;
+  --text-light: #6B7280;
+
+  --success: #25D366;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background:
+    radial-gradient(circle at top right,
+      rgba(74,168,255,.10) 0%,
+      transparent 35%),
+
+    radial-gradient(circle at bottom left,
+      rgba(7,27,68,.08) 0%,
+      transparent 35%),
+
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #f8fbff 45%,
+      #f5f8fc 100%
+    );
+
+  color: var(--text);
+  font-family: var(--font-body);
+
+  overflow-x: hidden;
+
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button,
+a {
+  transition: all .35s ease;
+}
+
+.font-heading {
+  font-family: var(--font-heading);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+/* ===========================
+   Scrollbar
+=========================== */
+
+::-webkit-scrollbar {
+  width: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: #edf4fb;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    #4AA8FF,
+    #1E88E5
+  );
+
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    180deg,
+    #2196F3,
+    #1565C0
+  );
+}
+
+/* ===========================
+   Text Selection
+=========================== */
+
+::selection {
+  background: #4AA8FF;
+  color: white;
+}
+
+/* ===========================
+   Smooth Images
+=========================== */
+
+img {
+  image-rendering: auto;
+}
+
+/* ===========================
+   Glass Cards
+=========================== */
+
+.glass-card {
+  background: rgba(255,255,255,.82);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(255,255,255,.45);
+}
+
+/* ===========================
+   Shadows
+=========================== */
+
+.shadow-luxury {
+  box-shadow:
+      0 10px 30px rgba(0,0,0,.06),
+      0 20px 60px rgba(74,168,255,.08);
+}
+
+/* ===========================
+   Hover
+=========================== */
+
+.hover-lift {
+  transition: .35s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-8px);
+}
