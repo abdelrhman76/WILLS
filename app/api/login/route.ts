@@ -22,7 +22,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const validPassword = await bcrypt.compare(password, admin.password);
+    const validPassword = await bcrypt.compare(
+      password,
+      admin.password
+    );
 
     if (!validPassword) {
       return NextResponse.json(
@@ -48,16 +51,21 @@ export async function POST(req: NextRequest) {
 
     response.cookies.set("token", token, {
       httpOnly: true,
-      secure: false,
+      secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 60 * 60 * 24 * 7,
       path: "/",
     });
 
     return response;
-  } catch {
+  } catch (error) {
+    console.error("LOGIN ERROR:", error);
+
     return NextResponse.json(
-      { message: "Server Error" },
+      {
+        message: "Server Error",
+        error: error instanceof Error ? error.message : String(error),
+      },
       { status: 500 }
     );
   }
