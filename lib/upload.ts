@@ -2,30 +2,42 @@ import { v4 as uuid } from "uuid";
 import { supabase } from "./supabase";
 
 async function saveFile(file: File, folder: string) {
-  const bytes = await file.arrayBuffer();
+  try {
+    const extension = file.name.split(".").pop();
+    const fileName = `${folder}/${uuid()}.${extension}`;
 
-  const buffer = Buffer.from(bytes);
+    console.log("==================================");
+    console.log("Uploading file...");
+    console.log("Bucket: uploads");
+    console.log("File Name:", fileName);
+    console.log("File Size:", file.size);
+    console.log("File Type:", file.type);
 
-  const extension = file.name.split(".").pop();
+    const result = await supabase.storage
+      .from("uploads")
+      .upload(fileName, file, {
+        contentType: file.type,
+        upsert: false,
+      });
 
-  const fileName = `${folder}/${uuid()}.${extension}`;
+    console.log("Upload Result:", result);
 
-  const { error } = await supabase.storage
-    .from("uploads")
-    .upload(fileName, buffer, {
-      contentType: file.type,
-      upsert: false,
-    });
+    if (result.error) {
+      console.error("Supabase Upload Error:", result.error);
+      throw result.error;
+    }
 
-  if (error) {
+    const { data } = supabase.storage
+      .from("uploads")
+      .getPublicUrl(fileName);
+
+    console.log("Public URL:", data.publicUrl);
+
+    return data.publicUrl;
+  } catch (error) {
+    console.error("UPLOAD FAILED:", error);
     throw error;
   }
-
-  const { data } = supabase.storage
-    .from("uploads")
-    .getPublicUrl(fileName);
-
-  return data.publicUrl;
 }
 
 export async function uploadCategoryImage(file: File) {
